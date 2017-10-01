@@ -1,0 +1,78 @@
+2014-10-03 0.17
+
+ * Ignore 'phantom' audio, subtitle tracks
+ * Check for garbage in the program chains, which indicate that a track is
+   non-existant, to work around additional copy protection
+ * Fix displaying content type for audio tracks, subtitles
+ * Fix pallete display of first entry
+ * Fix include orders
+ * Ignore read errors in titles that would not be displayed anyway
+ * Fix the chapter count
+ * Make sure the array size and the array limit used when initialising
+   the palette size is the same.
+ * Fix array printing.
+ * Correct subsecond calculations.
+ * Add sector information to the output format.
+ * Clean up code to be closer to ANSI C and compile without warnings
+   with more GCC compiler warnings.
+
+2005-12-12 - 0.16
+
+Addition of #include <stdint.h> to support newer libdvdread versions
+Abstraction of code to new generic interface - many thanks to Michael Haggerty, sorry it took so long
+
+2004-10-15 - 0.15
+
+abstraction of dvd contents to new struct
+addition of xml output
+additional -O option
+stream ids and osd palette added
+
+2003-09-24 - 0.10
+
+code cleanups
+
+2003-04-26 - 0.9
+
+Large restructuring to encorporate perl patch by Henk Vergonet, thanks
+more useful error codes
+finding longset title
+
+2003-03-01 - 0.8
+
+kept locked away in a dark room.
+
+2003-02-22 - 0.7
+
+found that reading title only works on linux and a few others, not BSD etc... might fix... might not.
+added info on what cell a chapter starts (wanted for nicer acidrip caching)
+
+2003-01-27 - 0.6
+
+found out (thanks Robos's vobcopy code (robos@muon.de)) that getting the name of a disc
+is actually a complete doddle, so added that functionality.
+
+2002-12-01 0.5
+
+added outputs for original aspect, needed for bpp calculations
+
+2002-11-18 - 0.4
+
+added individual track support : -t
+added EXPERIMENTAL code for better navigation
+
+2002-10-27 - 0.3
+
+more stuff... can't remember now.. very little
+
+2002-10-14 - 0.2
+
+Grammar changes to output
+Removed non alpha characters from language codes.
+Spelt track correctly below.
+
+2002-10-09 - 0.1 released
+
+prints information on each track, audio track, subtitle.
+
+

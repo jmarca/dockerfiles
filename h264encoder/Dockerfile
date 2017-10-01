@@ -15,10 +15,19 @@ RUN builddeps=' \
                 lame \
                 faac \
                 flac \
+                bash \
+                bc \
+                pv \
+                build-base \
+                libdvdread \
+                libdvdread-dev \
+                libdvdcss \
 		' \
 	&& apk --no-cache add \
-	$builddeps \
-	&& apk del --purge $builddeps
+	$builddeps
 
+ADD lsdvd /lsdvd
+
+RUN cd /lsdvd && ./configure && make -j6 && make install
 
 CMD [ "/bin/bash" ]

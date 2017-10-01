@@ -1,0 +1,23 @@
+lsdvd is a program that reads information about a DVD and outputs it
+to the console in various formats: human-readable, perl, python, ruby
+and XML.
+
+Run 'lsdvd --help' to see options.
+
+The only required library is libvdread.
+
+To install from the git source, you will need autools installed
+to run autoreconf:
+
+  $ autoreconf -fi
+
+To build the source after this, or when using the source tarball,
+run these commands:
+
+  $ ./configure
+  $ make
+  $ make install
+
+See https://sourceforge.net/projects/lsdvd/ for documentation, to report
+bugs, follow progress in git, and follow the development mailing list.
+Patches, feedback and bug reports about DVDs are welcome!
