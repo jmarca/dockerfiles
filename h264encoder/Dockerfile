@@ -19,7 +19,6 @@ RUN builddeps=' \
 	&& apk --no-cache add \
 	$builddeps \
 	&& apk del --purge $builddeps
-RUN cd /h264enc \
-    && make install
+
 
 CMD [ "/bin/bash" ]
