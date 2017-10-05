@@ -12,8 +12,14 @@
 #
 FROM jrottenberg/ffmpeg
 LABEL maintainer "James Marca <blind.line.drawing@gmail.com>"
+
+
+
+FROM alpine:latest
 ADD . /h264enc
 ADD lsdvd /lsdvd
+
+COPY --from=0 / /
 
 RUN  buildDeps="autoconf \
                 build-base \
@@ -50,10 +56,12 @@ RUN  buildDeps="autoconf \
                 libdvdread-dev \
                 libdvdcss \
 		'  \
-        && apk  --no-cache add --update ${buildDeps} ${deps} libgcc libstdc++ ca-certificates libcrypto1.0 libssl1.0 \
-	&& apk --no-cache add $deps
+        && apk --no-cache add ${buildDeps} libgcc libstdc++ ca-certificates libcrypto1.0 libssl1.0 \
+	&& apk --no-cache add ${deps}
 
 RUN cd /lsdvd && ./configure && make -j4 && make install
+
+
 
 ENV HOME /home/h264enc
 RUN useradd --create-home --home-dir $HOME h264enc \
