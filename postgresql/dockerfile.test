@@ -1,0 +1,21 @@
+#
+# Based on https://github.com/walm/docker-pgtap/blob/master/Dockerfile
+#
+FROM postgres:latest
+MAINTAINER James Marca <james@activimetrics.com>
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    git-core \
+    curl \
+    postgresql-server-dev-$PG_MAJOR \
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -LO http://xrl.us/cpanm \
+    && chmod +x cpanm \
+    && ./cpanm TAP::Parser::SourceHandler::pgTAP \
+    && git clone --depth 1 git://github.com/theory/pgtap.git \
+    && cd pgtap \
+    && make \
+    && make install \
+    && apt-get purge -y --auto-remove \
+    git
