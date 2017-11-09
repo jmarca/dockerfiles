@@ -1,0 +1,1 @@
+docker run --rm -it -v /tmp/.X11-unix:/tmp/.X11-unix -v /home/james/Pictures:/home/darktable/Pictures  -v /var/run/dbus:/var/run/dbus -e DISPLAY=unix:0 -v /etc/localtime:/etc/localtime:ro -e GDK_SCALE -e GDK_DPI_SCALE  --device /dev/dri/card0 --name darktable    jmarca/darktable

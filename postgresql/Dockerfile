@@ -1,7 +1,7 @@
 #
 # Based on https://github.com/walm/docker-pgtap/blob/master/Dockerfile
 #
-FROM postgres:alpine
+FROM postgres:latest
 MAINTAINER James Marca <james@activimetrics.com>
 
 RUN apk update \

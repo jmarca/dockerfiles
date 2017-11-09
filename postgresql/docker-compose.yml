@@ -4,7 +4,7 @@ version: '3.3'
 
 services:
   db:
-    image: postgres_pgtap:alpine
+    image: postgres_pgtap:latest
     restart: always
     container_name: dev_db
     ports:
@@ -12,14 +12,9 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
     environment:
-      - POSTGRES_PASSWORD=${PGPASS}
-      # - POSTGRES_INITDB_ARGS="-A md5"
+      - POSTGRES_USER=${PGUSER_DOCKER}
+      - POSTGRES_PASSWORD=${PGPASS_DOCKER}
 
-  # adminer:
-  #   image: adminer
-  #   restart: always
-  #   ports:
-  #     - 8080:8080
 # volumes:
 #   maildata:
 #     driver: local
