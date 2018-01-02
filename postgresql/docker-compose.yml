@@ -7,6 +7,7 @@ services:
     image: postgres_pgtap:latest
     restart: always
     container_name: dev_db
+    # don't expose ports in production
     ports:
       - 6543:5432
     volumes:
