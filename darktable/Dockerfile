@@ -3,77 +3,63 @@ FROM debian:buster
 
 RUN apt-get update && \
     apt-get install  -y --no-install-recommends \
+    autoconf \
+    automake \
+    bash \
+    build-essential \
     ca-certificates \
+    cmake \
+    cmake \
+    curl \
+    debhelper \
+    debhelper \
+    g++ \
+    gcc \
     git \
+    git \
+    intltool \
+    libcairo2-dev \
+    libcolord-dev \
+    libcolord-gtk-dev \
+    libcups2-dev \
+    libcurl4-gnutls-dev \
+    libexiv2-dev \
+    libflickcurl-dev \
     libgl1-mesa-dri \
     libgl1-mesa-glx \
+    libglib2.0-0 \
+    libglib2.0-dev \
+    libglib2.0-dev \
+    libgphoto2-dev \
+    libgraphicsmagick1-dev \
+    libgtk-3-dev \
+    libjpeg-dev \
+    libjson-glib-dev \
+    liblcms2-dev \
+    liblua5.3-dev \
+    libopenexr-dev \
+    libopenjp2-7-dev \
+    libosmgpsmap-1.0-dev \
+    libpng-dev \
+    libpng-dev \
+    libpugixml-dev \
+    librsvg2-dev \
+    libsecret-1-dev \
+    libsoup2.4-dev \
+    libsqlite3-dev \
+    libtiff-dev \
+    libwebp-dev \
+    llvm-4.0 \
+    make \
+    pkg-config \
+    tar \
     usbutils \
-    x11-xserver-utils
-
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-                autoconf \
-                automake \
-                cmake \
-                git \
-                debhelper \
-                pkg-config \
-                libpng-dev
-                # doxygen python3-docutils
-
-RUN apt-get update \
-    &&  apt-get install -y --no-install-recommends \
-                ca-certificates \
-                build-essential \
-                gcc \
-                g++ \
-                libglib2.0-0 \
-                libglib2.0-dev \
-                llvm-4.0 \
-                make \
-                x11-xserver-utils \
-                bash \
-                curl \
-                tar \
-                xz-utils \
+    x11-xserver-utils \
+    x11-xserver-utils \
+    xsltproc \
+    xz-utils \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-    cmake \
-     debhelper \
-     intltool \
-     libcairo2-dev \
-     libcolord-dev \
-     libcolord-gtk-dev \
-     libcups2-dev \
-     libcurl4-gnutls-dev \
-     libexiv2-dev \
-     libflickcurl-dev \
-     libglib2.0-dev \
-     libgphoto2-dev \
-     libgraphicsmagick1-dev \
-     libgtk-3-dev \
-     libjpeg-dev \
-     libjson-glib-dev \
-     liblcms2-dev \
-     liblua5.3-dev \
-     libopenexr-dev \
-     libopenjp2-7-dev \
-     libosmgpsmap-1.0-dev \
-     libpng-dev \
-     libpugixml-dev \
-     librsvg2-dev \
-     libsecret-1-dev \
-     libsoup2.4-dev \
-     libsqlite3-dev \
-     libtiff-dev \
-     libwebp-dev \
-     xsltproc \
-     && apt-get clean \
-     && rm -rf /var/lib/apt/lists/*
 
 RUN \
     git clone --depth 1  https://git.code.sf.net/p/lensfun/code.git /usr/src/lensfun \
@@ -90,11 +76,11 @@ RUN \
     ) \
     && rm -rf /usr/src/lensfun  \
     && cd /usr/src \
-    && curl -sSOL https://github.com/darktable-org/darktable/releases/download/release-2.4.0/darktable-2.4.0.tar.xz \
+    && curl -sSOL https://github.com/darktable-org/darktable/releases/download/release-2.4.1/darktable-2.4.1.tar.xz \
     && ( \
          ls -lrt \
-         && tar xvf darktable-2.4.0.tar.xz \
-         && cd darktable-2.4.0 \
+         && tar xvf darktable-2.4.1.tar.xz \
+         && cd darktable-2.4.1 \
          && mkdir build && cd build \
          && cmake -DCMAKE_BUILD_TYPE=Release \
                   -DBUILD_FOR_SSE=ON \
