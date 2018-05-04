@@ -1,6 +1,9 @@
 #!/bin/sh
 set -e
 
+if [ -e "$HOME/.mutt/aliases" ]; then
+    echo >&2 "found mutt aliases"
+fi
 if [ -z "$GMAIL" ]; then
 	echo >&2 'error: missing GMAIL environment variable'
 	echo >&2 '  try running again with -e GMAIL=your-email@gmail.com'
@@ -19,13 +22,15 @@ if [ -z "$GMAIL_FROM" ]; then
 fi
 
 if [ -z "$IMAP_SERVER" ]; then
-	IMAP_SERVER="imap.gmail.com:993"
+	  IMAP_SERVER="activimetrics.com:993"
 fi
 
 if [ -z "$SMTP_SERVER" ]; then
-	SMTP_SERVER="smtp.gmail.com"
+	  SMTP_SERVER="activimetrics.com"
 fi
 
+sed -i "s/%SMTP_PORT%/$SMTP_PORT/g"     "$HOME/.mutt/muttrc"
+sed -i "s/%SMTP_PROTOCOL%/$SMTP_PROTOCOL/g" "$HOME/.mutt/muttrc"
 sed -i "s/%GMAIL_LOGIN%/$GMAIL/g"       "$HOME/.mutt/muttrc"
 sed -i "s/%GMAIL_NAME%/$GMAIL_NAME/g"   "$HOME/.mutt/muttrc"
 sed -i "s/%GMAIL_PASS%/$GMAIL_PASS/g"   "$HOME/.mutt/muttrc"
