@@ -61,8 +61,10 @@ RUN apt-get update && \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# git clone --depth 1  https://git.code.sf.net/p/lensfun/code /usr/src/lensfun \
+
 RUN \
-    git clone --depth 1  https://git.code.sf.net/p/lensfun/code.git /usr/src/lensfun \
+    git clone --depth 1 git://git.code.sf.net/p/lensfun/code /usr/src/lensfun \
     && ( \
             cd /usr/src/lensfun \
             && mkdir build && cd build \
@@ -76,11 +78,11 @@ RUN \
     ) \
     && rm -rf /usr/src/lensfun  \
     && cd /usr/src \
-    && curl -sSOL https://github.com/darktable-org/darktable/releases/download/release-2.4.1/darktable-2.4.1.tar.xz \
+    && curl -sSOL https://github.com/darktable-org/darktable/releases/download/release-2.4.3/darktable-2.4.3.tar.xz \
     && ( \
          ls -lrt \
-         && tar xvf darktable-2.4.1.tar.xz \
-         && cd darktable-2.4.1 \
+         && tar xvf darktable-2.4.3.tar.xz \
+         && cd darktable-2.4.3 \
          && mkdir build && cd build \
          && cmake -DCMAKE_BUILD_TYPE=Release \
                   -DBUILD_FOR_SSE=ON \
