@@ -63,8 +63,12 @@ RUN apt-get update && \
 
 # git clone --depth 1  https://git.code.sf.net/p/lensfun/code /usr/src/lensfun \
 
-RUN \
-    git clone --depth 1 git://git.code.sf.net/p/lensfun/code /usr/src/lensfun \
+RUN buildDeps=' \
+                ca-certificates \
+        ' \
+    && apt-get update && apt-get install -y $buildDeps --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/* \
+    && git clone --depth 1 git://git.code.sf.net/p/lensfun/code /usr/src/lensfun \
     && ( \
             cd /usr/src/lensfun \
             && mkdir build && cd build \
@@ -76,8 +80,10 @@ RUN \
             && make all \
             && make install \
     ) \
-    && rm -rf /usr/src/lensfun  \
-    && cd /usr/src \
+    && rm -rf /usr/src/lensfun
+
+RUN \
+    cd /usr/src \
     && curl -sSOL https://github.com/darktable-org/darktable/releases/download/release-2.4.3/darktable-2.4.3.tar.xz \
     && ( \
          ls -lrt \
