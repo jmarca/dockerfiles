@@ -14,7 +14,7 @@ LABEL maintainer "James Marca <james@activimetrics.com>"
 RUN addgroup -g 1000 user \
 	&& adduser -D -h /home/user -G user -u 1000 user
 
-RUN apk --no-cache add \
+RUN apk update && apk upgrade && apk --no-cache add \
 	ca-certificates \
 	elinks \
 	git \

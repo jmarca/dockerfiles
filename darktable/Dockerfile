@@ -9,13 +9,10 @@ RUN apt-get update && \
     build-essential \
     ca-certificates \
     cmake \
-    cmake \
     curl \
-    debhelper \
     debhelper \
     g++ \
     gcc \
-    git \
     git \
     intltool \
     libcairo2-dev \
@@ -28,7 +25,6 @@ RUN apt-get update && \
     libgl1-mesa-dri \
     libgl1-mesa-glx \
     libglib2.0-0 \
-    libglib2.0-dev \
     libglib2.0-dev \
     libgphoto2-dev \
     libgraphicsmagick1-dev \
@@ -52,8 +48,11 @@ RUN apt-get update && \
     llvm-4.0 \
     make \
     pkg-config \
+    sudo \
     tar \
+    libusb \
     usbutils \
+    dbus-x11 \
     x11-xserver-utils \
     x11-xserver-utils \
     xsltproc \
@@ -104,10 +103,16 @@ RUN \
 
 
 # Add darktable user named james
-RUN groupadd -r darktable && useradd -r -g darktable -G audio,video james \
+RUN groupadd -r darktable \
+    && useradd -r -u 1000 -g darktable -G audio,video james \
     && mkdir -p /home/james/Downloads && chown -R james:darktable /home/james
 
+# my user needs the ability to mount
+# because USB data
+RUN echo "james ALL=NOPASSWD: /usr/bin/mount, /sbin/mount.nfs, /usr/bin/umount" >> /etc/sudoers
 
+ENV HOME /home/james
+WORKDIR $HOME
 # Run Darktable as non privileged user
 USER james
 
