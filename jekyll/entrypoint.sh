@@ -3,6 +3,11 @@
 set -e
 set -o pipefail
 
+export JEKYLL_HOME=/opt/jekyll
+export JEKYLL_BIN=$JEKYLL_HOME/bin
+export PATH="$JEKYLL_BIN:$PATH"
+
+
 handle_signal() {
   PID=$!
   echo "Received signal. PID is ${PID}"

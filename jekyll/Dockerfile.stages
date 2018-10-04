@@ -12,10 +12,9 @@ RUN  mkdir -p /opt/jekyll \
 	&& adduser -u 666 -SHG jekyll jekyll \
 	&& mkdir -p /config \
 	&& chown -R jekyll:jekyll /opt/jekyll /config
-ENV GEM_HOME=/opt/jekyll/gems
 ENV JEKYLL_HOME=/opt/jekyll
 ENV JEKYLL_BIN=$JEKYLL_HOME/bin
-ENV PATH="$JEKYLL_BIN:$GEM_HOME/bin:$PATH"ENV PATH="$JEKYLL_BIN:$PATH"
+ENV PATH="$JEKYLL_BIN:$PATH"
 
 
 # ENV JEKYLL_VAR_DIR=/var/jekyll
@@ -45,6 +44,7 @@ RUN apk update \
        cmake \
        linux-headers \
        openjdk8-jre \
+       openssl-dev \
     && apk add --no-cache --virtual .jekyll-rundeps \
        git \
        libxslt \
@@ -52,20 +52,17 @@ RUN apk update \
        tzdata \
        bash \
        nodejs-npm \
-       yarn
+       yarn \
+       openssl
 
 RUN echo "gem: --no-ri --no-rdoc" > ~/.gemrc \
+    && npm install -g sass \
     && yes | gem update --system --development \
-    && gem install bundler \
-    && gem install jekyll \
-    && gem install jekyll-import \
-     hpricot \
-     sassc \
-     fileutils  \
-     safe_yaml \
-     hpricot \
-      open_uri_redirections \
-    && apk del .build-deps
+    && gem install bundler
+
+
+
+# RUN apk del .build-deps
 
 RUN mkdir -p /srv/jekyll
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
