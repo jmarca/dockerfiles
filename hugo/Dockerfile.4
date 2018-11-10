@@ -2,7 +2,8 @@ FROM busybox:1.28 AS fetch-extended
 
 ARG VERSION=0.49.2
 
-ADD https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_extended_${VERSION}_Linux-64bit.tar.gz /hugo.tar.gz
+#ADD https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_extended_${VERSION}_Linux-64bit.tar.gz /hugo.tar.gz
+COPY hugo_extended_0.49.2_Linux-64bit.tar.gz /hugo.tar.gz
 RUN tar -zxvf hugo.tar.gz
 
 
@@ -10,7 +11,8 @@ FROM busybox:1.28 AS fetch-pandoc
 
 ARG PANDOC_VERSION=2.3.1
 
-ADD https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux.tar.gz /pandoc.tar.gz
+#ADD https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux.tar.gz /pandoc.tar.gz
+COPY pandoc-${PANDOC_VERSION}-linux.tar.gz /pandoc.tar.gz
 RUN tar -zxvf pandoc.tar.gz
 RUN mv pandoc-${PANDOC_VERSION}/bin/pandoc /pandoc
 RUN mv pandoc-${PANDOC_VERSION}/bin/pandoc-citeproc /pandoc-citeproc
@@ -21,9 +23,9 @@ FROM ubuntu:18.04 AS ubuntu
 
 FROM frolvlad/alpine-glibc:alpine-3.7
 
-ENV HUGO_BIND="0.0.0.0" \
-    HUGO_DESTINATION="/target" \
-    HUGO_ENV="DEV"
+ENV HUGO_BIND="0.0.0.0"
+ENV HUGO_DESTINATION="/target"
+ENV HUGO_ENV="DEV"
 
 COPY --from=fetch-extended /hugo /usr/bin/hugo
 
@@ -32,17 +34,23 @@ RUN apk add --no-cache libstdc++ bash ca-certificates
 
 COPY --from=ubuntu /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.25 /usr/lib/libstdc++.so.6
 
-COPY --from=fetch-pandoc /pandoc /bin/pandoc
+COPY --from=fetch-pandoc /pandoc /bin/pandoc-default
 COPY --from=fetch-pandoc /pandoc-citeproc /bin/pandoc-citeproc
 
 VOLUME /target
 ENV HOME /home
+ENV PANDOC_OPTS "--highlight-style=zenburn"
 RUN adduser -D -h $HOME -H -u 1000 -s -G user user \
-    && chown -R user:user $HOME \
-    && chown -R user:user /target
+        && chown -R user:user $HOME \
+        && mkdir /work \
+        && chown -R user:user /work \
+        && chown -R user:user /target
 
 USER user
-WORKDIR /home
+WORKDIR /work
 
-ENTRYPOINT ["/usr/bin/hugo"]
-CMD [ "help" ]
+COPY entrypoint.sh /usr/local/bin/
+COPY .bashrc  /home/.bashrc
+
+ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
+CMD [ "hugo", "help" ]
