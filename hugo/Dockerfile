@@ -1,4 +1,4 @@
-FROM golang:1.11-alpine3.7 AS builder
+FROM golang:1.11-alpine3.8 AS builder
 LABEL maintainer "James Marca <james@activimetrics.com>"
 
 ENV CGO_ENABLED=1
@@ -43,12 +43,16 @@ RUN mv pandoc-${PANDOC_VERSION}/bin/pandoc /pandoc
 RUN mv pandoc-${PANDOC_VERSION}/bin/pandoc-citeproc /pandoc-citeproc
 RUN ["/pandoc", "-v"]
 
-FROM frolvlad/alpine-glibc:alpine-3.7 as deploy
+
+FROM ubuntu:18.04 AS ubuntu
+
+FROM frolvlad/alpine-glibc as deploy
 
 RUN apk --no-cache add \
         libstdc++ \
         bash bash-completion sassc
 
+# COPY --from=ubuntu /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.25 /usr/lib/libstdc++.so.6
 
 
 COPY --from=builder /go/bin/hugo /bin/hugo

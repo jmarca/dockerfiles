@@ -10,12 +10,11 @@
 #	--name libreoffice \
 #	jess/libreoffice
 #
-FROM alpine:latest
-LABEL maintainer "Jessie Frazelle <jess@linux.com>"
+FROM jess/libreoffice:latest
+LABEL maintainer "James Marca <james@activimetrics.com>"
 
-RUN apk --no-cache add \
-	--repository https://dl-3.alpinelinux.org/alpine/edge/testing \
-	libreoffice \
-	ttf-dejavu
+RUN apk --no-cache add --update \
+    openjdk8-jre-base \
+ && echo "securerandom.source=file:/dev/urandom" >> /usr/lib/jvm/default-jvm/jre/lib/security/java.security
 
 ENTRYPOINT [ "libreoffice" ]
