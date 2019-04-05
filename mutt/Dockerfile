@@ -8,8 +8,9 @@
 #	--name mutt \
 #	jess/mutt
 #
-FROM alpine:edge
+FROM alpine:latest
 LABEL maintainer "James Marca <james@activimetrics.com>"
+# but I'm just copying jessfraz
 
 RUN addgroup -g 1000 user \
 	&& adduser -D -h /home/user -G user -u 1000 user
@@ -19,11 +20,17 @@ RUN apk update && apk upgrade && apk --no-cache add \
 	elinks \
 	git \
 	gnupg1 \
+    gnutls \
 	lynx \
 	mutt \
 	mutt-doc \
 	vim \
-  emacs
+    emacs \
+    dbus-libs \
+    libxml2 \
+    ncurses-libs \
+    zlib \
+    musl
 
 # a browser is necessary!
 ENV BROWSER lynx
