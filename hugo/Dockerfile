@@ -24,7 +24,7 @@ RUN mkdir -p /work/src/hugo
 WORKDIR /work/src/
 
 
-ENV HUGO_VERSION v0.50
+ENV HUGO_VERSION v0.53
 # RUN git clone --depth 1 --branch ${HUGO_VERSION} https://github.com/jmarca/hugo.git
 
 COPY hugo/. /work/src/hugo/.
