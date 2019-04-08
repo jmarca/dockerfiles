@@ -1,0 +1,65 @@
+# this is a second try.  this one is new dockerfile way.  this one also add pandoc
+
+FROM debian:stretch AS fetch-extended
+
+# Install packages to download ConTeXt minimals
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends rsync \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+# Install ConTeXt minimals
+# http://wiki.contextgarden.net/ConTeXt_Standalone
+RUN mkdir /opt/context \
+        && cd /opt/context \
+        && rsync -ptv rsync://contextgarden.net/minimals/setup/first-setup.sh . \
+        && sh ./first-setup.sh  --engine=luatex --modules=all --fonts=all \
+        && rm -rf /opt/context/tex/texmf-context/doc
+
+
+FROM busybox:1.28 AS fetch-pandoc
+ARG PANDOC_VERSION=2.7.2
+ADD https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux.tar.gz /pandoc.tar.gz
+#COPY pandoc-${PANDOC_VERSION}-linux.tar.gz /pandoc.tar.gz
+RUN tar -zxvf pandoc.tar.gz
+RUN mv pandoc-${PANDOC_VERSION}/bin/pandoc /pandoc
+RUN mv pandoc-${PANDOC_VERSION}/bin/pandoc-citeproc /pandoc-citeproc
+
+
+# FROM ubuntu:18.04 AS ubuntu
+
+FROM node:8-slim
+
+
+COPY --from=fetch-extended /opt/context /opt/context
+
+# RUN apk add --no-cache libstdc++ bash # ca-certificates
+# COPY --from=ubuntu /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.25 /usr/lib/libstdc++.so.6
+
+COPY --from=fetch-pandoc /pandoc /bin/pandoc
+COPY --from=fetch-pandoc /pandoc-citeproc /bin/pandoc-citeproc
+
+
+# ENV PANDOC_OPTS "--highlight-style=zenburn"
+# RUN adduser -D -h $HOME -H -u 1000 -s -G user user \
+#        && chown -R user:user $HOME \
+RUN apt-get update \
+        && apt-get install -y --no-install-recommends  inotify-tools \
+        && apt-get clean \
+        && rm -rf /var/lib/apt/lists/* \
+        && npm install -g pandoc-context-filters
+
+
+
+# RUN useradd --create-home --home-dir $HOME user \
+#         && chown -R user:user $HOME
+ENV LANG C.UTF-8
+VOLUME /work
+
+ENV PATH="/opt/context/tex/texmf-linux-64/bin:${PATH}"
+ENV PATH="/bin:${PATH}"
+COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod a+x /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
+CMD [ "context ${TEXFILE}" ]
