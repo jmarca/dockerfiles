@@ -16,15 +16,16 @@ RUN addgroup -g 1000 user \
 	&& adduser -D -h /home/user -G user -u 1000 user
 
 RUN apk update && apk upgrade && apk --no-cache add \
-	ca-certificates \
-	elinks \
-	git \
-	gnupg1 \
+    ca-certificates \
+    cyrus-sasl-plain \
+    elinks \
+    git \
+    gnupg1 \
     gnutls \
-	lynx \
-	mutt \
-	mutt-doc \
-	vim \
+    lynx \
+    mutt \
+    mutt-doc \
+    vim \
     emacs \
     dbus-libs \
     libxml2 \
