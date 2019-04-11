@@ -14,7 +14,13 @@ FROM jess/libreoffice:latest
 LABEL maintainer "James Marca <james@activimetrics.com>"
 
 RUN apk --no-cache add --update \
-    openjdk8-jre-base \
- && echo "securerandom.source=file:/dev/urandom" >> /usr/lib/jvm/default-jvm/jre/lib/security/java.security
+        openjdk8-jre-base \
+        msttcorefonts-installer \
+        fontconfig \
+        font-noto \
+        font-adobe-100dpi \
+        && update-ms-fonts \
+        && fc-cache -f \
+        && echo "securerandom.source=file:/dev/urandom" >> /usr/lib/jvm/default-jvm/jre/lib/security/java.security
 
 ENTRYPOINT [ "libreoffice" ]
