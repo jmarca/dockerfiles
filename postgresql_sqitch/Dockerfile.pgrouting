@@ -1,0 +1,65 @@
+FROM jmarca/postgresql
+MAINTAINER James Marca <james@activimetrics.com>
+ENV POSTGIS_VERSION 3.0.0rc1
+RUN apk update \
+        && apk upgrade \
+        && apk add --no-cache  git sqlite-dev sqlite-libs sqlite json-c json-c-dev \
+        && apk add --no-cache --virtual .build-deps perl-dev boost-dev cmake tar make gcc cmake build-base libxml2-dev geos-dev gdal-dev autoconf automake make libtool \
+        --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
+        --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
+        && apk add --no-cache  boost perl libxml2 geos gdal \
+        --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
+        --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
+
+ARG PROJ_BRANCH=master
+
+RUN  git clone --depth 1 --branch ${PROJ_BRANCH} https://github.com/OSGEO/proj.4 && \
+        cd proj.4 && \
+        ./autogen.sh && ./configure && make -j4 && make install && \
+        cd .. && rm -rf proj.4
+
+
+RUN  wget -O postgis.tar.gz "https://github.com/postgis/postgis/archive/$POSTGIS_VERSION.tar.gz" \
+        && tar -xvf postgis.tar.gz \
+        && cd postgis-3.0.0rc1 \
+        && ./autogen.sh \
+        && ./configure  \
+        && make -j1 \
+        && make install \
+        && cd .. && rm -rf postgis-3.0.0rc1
+
+RUN   wget -O pgrouting-3.0.0-alpha.tar.gz  https://github.com/pgRouting/pgrouting/archive/v3.0.0-alpha.tar.gz \
+        && tar xvf  pgrouting-3.0.0-alpha.tar.gz \
+        && cd pgrouting-3.0.0-alpha \
+        && mkdir build \
+        && cd build \
+        && cmake  .. \
+        && make -j6 \
+        && make install \
+        && cd ../.. && rm -rf  pgrouting-3.0.0-alpha
+
+ARG OSM2PGROUTING_VERSION=2.3.6
+ARG LIBPQXX_VERSION=6.4.5
+
+RUN apk add --no-cache expat expat-dev xmlto
+
+
+
+RUN wget -O libpqxx.tar.gz "https://github.com/jtv/libpqxx/archive/$LIBPQXX_VERSION.tar.gz" \
+        && tar xvf libpqxx.tar.gz \
+        && cd libpqxx-$LIBPQXX_VERSION  \
+        && ./configure prefix=/usr --disable-documentation \
+        && make -j6 \
+        && make install \
+        && cd .. && rm -rf libpqxx*
+
+
+RUN  wget -O osm2pgrouting.tar.gz "https://github.com/pgRouting/osm2pgrouting/archive/v$OSM2PGROUTING_VERSION.tar.gz" \
+        && tar xvf osm2pgrouting.tar.gz \
+        && cd osm2pgrouting-$OSM2PGROUTING_VERSION  \
+        && mkdir build \
+        && cd build \
+        && cmake -DCMAKE_INSTALL_PREFIX=/usr .. \
+        && make -j6 \
+        && make install \
+        && cd ../.. && rm -rf osm2pgrouting*
