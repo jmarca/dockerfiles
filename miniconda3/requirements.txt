@@ -4,3 +4,4 @@ numpy
 matplotlib
 seaborn
 textblob
+nltk>=3.6 # not directly required, pinned by Snyk to avoid a vulnerability
